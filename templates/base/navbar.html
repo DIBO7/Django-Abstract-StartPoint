@@ -1,6 +1,6 @@
 <!--Navbar -->
 <nav class="mb-1 navbar navbar-expand-md navbar-dark secondary-color lighten-1">
-  <a class="navbar-brand" href="#">Django-Abstract-StartPoint</a>
+  <a class="navbar-brand" href="{%url 'index'%}">Django-Abstract-StartPoint (v 0.1) | created by Ibrahim</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
     aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -9,12 +9,12 @@
     <ul class="navbar-nav ml-auto nav-flex-icons">
 
       <li class="nav-item">
-        <a class="nav-link waves-effect waves-light">
+        <a class="nav-link waves-effect waves-light" href="https://www.linkedin.com/in/ibrahim-oduola/" target="_blank">
           <i class="fab fa-linkedin-in"></i>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link waves-effect waves-light">
+        <a class="nav-link waves-effect waves-light" href="https://github.com/Ibra-Portfolio" target="_blank">
           <i class="fab fa-github"></i>
         </a>
       </li>
@@ -31,8 +31,8 @@
         </div>
       </li>
     {%else%}
-    <button type="button" class="btn btn-outline-warning btn-rounded waves-effect btn-sm">Sign Up</button>
-    <button type="button" class="btn btn-outline-info btn-rounded waves-effect btn-sm">Sign In</button>
+    <button type="button" class="btn btn-outline-warning waves-effect btn-sm">Sign Up</button>
+    <a href="{%url 'login'%}" class="btn btn-outline-info waves-effect btn-sm">Sign In</a>
     {%endif%}
     </ul>
   </div>
