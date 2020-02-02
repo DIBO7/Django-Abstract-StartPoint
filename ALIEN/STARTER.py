@@ -28,7 +28,7 @@ Initial_App_Name = properties.PROJECT_USER_APP
 #is an error....rather refer to properties.DJANGO_PROJECT_NAME or properties.PROJECT_USER_APP
 	
 proj = input("Enter the name of your Django Project: ")
-title = input("Enter the name of the Django App: ")
+title = input("What name do you want for your django app: ")
 
 
 if proj in parent_files_and_folders: #if the inputed project name exists in the parent_directory
@@ -54,7 +54,7 @@ if proj in parent_files_and_folders: #if the inputed project name exists in the 
 				else:
 					sets.write(texts)
 			src.close()
-			print('Edited 1 from 2...')
+			print('Edited 1 from 3...')
 
 		with open(target_urls, 'w') as urls:
 			src = open(base_urls, 'r')
@@ -66,7 +66,7 @@ if proj in parent_files_and_folders: #if the inputed project name exists in the 
 				else:
 					urls.write(texts)
 			src.close()
-			print('Edited 2 from 2...')
+			print('Edited 2 from 3...')
 
 		with open(os.path.join(current_directory, 'properties.py'), 'w') as props:
 			props.write("DJANGO_PROJECT_NAME = '" + proj +"' \n")
@@ -74,7 +74,7 @@ if proj in parent_files_and_folders: #if the inputed project name exists in the 
 			props.write("FIRST_SETUP = False")
 		print("All files ready to go...")
 
-		os.rename(os.path.join(parent_directory, Initial_App_Name), os.path.join(parent_directory, properties.PROJECT_USER_APP))
+		os.rename(os.path.join(parent_directory, Initial_App_Name), os.path.join(parent_directory, title))
 		print("All Processes Successfully Completed")
 
 	except:
