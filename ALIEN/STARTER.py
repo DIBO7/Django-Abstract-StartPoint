@@ -6,6 +6,8 @@ AND RUN THIS FILE WITH PYTHON
 
 import os
 import properties
+import secrets
+import string
 
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #parent_directory refers to the project folder
@@ -31,6 +33,13 @@ proj = input("Enter the name of your Django Project: ")
 title = input("What name do you want for your django app: ")
 
 
+def Generate_Secret_Key(number=60):
+	SECRET_KEY = ''.join([secrets.SystemRandom().choice(
+		"{}{}{}".format(string.ascii_letters, string.digits, string.punctuation)
+		) for i in range(number)])
+	return str(SECRET_KEY)
+
+
 if proj in parent_files_and_folders: #if the inputed project name exists in the parent_directory
 	print("Initiating Django-Abstract-StartPoint protocol...")
 	target_directory = os.path.join(parent_directory, proj)
@@ -51,6 +60,9 @@ if proj in parent_files_and_folders: #if the inputed project name exists in the 
 					sets.write(texts.replace(properties.DJANGO_PROJECT_NAME, proj))
 				elif properties.PROJECT_USER_APP in texts:
 					sets.write(texts.replace(properties.PROJECT_USER_APP, title))
+				elif '__SECRET_KEY__' in texts:
+					sk = Generate_Secret_Key()
+					sets.write(texts.replace('__SECRET_KEY__', sk))
 				else:
 					sets.write(texts)
 			src.close()
