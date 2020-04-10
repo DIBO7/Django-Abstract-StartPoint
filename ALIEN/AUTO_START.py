@@ -1,7 +1,7 @@
 '''
 DJANGO-ABSTRACT-STARTPOINT STARTER.PY
-MAKE SURE TO SAVE ANY CHANGES TO THIS FOLDER
-AND RUN THIS FILE WITH PYTHON
+MAKE SURE YOU DON'T TAMPER WITH THIS FILE
+AND JUST RUN THIS FILE WITH PYTHON
 '''
 
 import os
@@ -12,7 +12,8 @@ import string
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #parent_directory refers to the project folder
 current_directory = os.path.dirname(os.path.abspath(__file__))
-#current directory refers to the directory whit this file in it (i.e ALIEN)
+#current directory refers to the directory with this file in it (i.e ALIEN)
+
 #target directory would be defind later on and used to refer to the folder that has the root 'settings.py'
 
 parent_files_and_folders = []
@@ -25,7 +26,7 @@ for everything in os.listdir(parent_directory):
 
 #Below is the initial value of the project's main app name
 Initial_App_Name = properties.PROJECT_USER_APP
-#do not refer to IInitial_App_Name directly to enable the system revers all work done if there...
+#do not refer to Initial_App_Name directly to enable the system reverse all work done if there...
 #is an error....instead refer to properties.PROJECT_USER_APP
 	
 proj = input("Input title of your Django Project: ")
@@ -48,19 +49,28 @@ def Generate_Secret_Key(number=60):
 	return SECRET_KEY
 
 
+def Capitalize_First_Letter(word):
+	#as the name suggests, it capitalizes only the first letter of a given string
+	word = word.lower()
+	return word.replace(word[0], word[0].upper(), 1)
+
+
 
 if proj in parent_files_and_folders: #if the inputed project name exists in the parent_directory
 	print("Initiating Django-Abstract-StartPoint protocol...")
 	target_directory = os.path.join(parent_directory, proj)
 	#target_directory refers to the django folder where django settings.py lives
 	try:
-		print("Locating Neccesary files and folders...")
+		print("Locating all neccesary files and folders...")
 		target_settings = os.path.join(target_directory, 'settings.py') 
 		target_urls = os.path.join(target_directory, 'urls.py')
+		#traget_settings and target_urls refer to the the settings.py and urls.py in the actual django project folder
+
+		#base_settings and base_urls refer to the ones within the DJANGO ABSTRACT STARTPOINT i.e the ALIEN folder
 		base_settings = os.path.join(current_directory, 'source_settings.py')
 		base_urls = os.path.join(current_directory, 'source_urls.py')
 
-		print("All Files located, preparing to edit...")
+		print("All necessary files located, preparing to edit...")
 		
 		#Now write a new settings.py with appropriate input
 		with open(target_settings, 'w') as sets:
@@ -90,6 +100,21 @@ if proj in parent_files_and_folders: #if the inputed project name exists in the 
 					urls.write(texts)
 			src.close()
 			print('Edited 2 from 3...')
+
+		#inside the created by DJANGO ABSTRACT STARTPOINT, change the apps.py to suit the name changes
+		target_app = os.path.join(parent_directory, 'DjangoAbstractBasics', 'apps.py')
+		base_app = os.path.join(current_directory, 'apps.py')
+		with open(target_app, 'w') as app:
+			src = open(base_app, 'r')
+			for texts in src:
+				if 'DjangoAbstractBasics' in texts:
+					app.write(texts.replace('DjangoAbstractBasics', title))
+				elif Capitalize_First_Letter('DjangoAbstractBasics') in texts:
+					app.write(texts.replace(Capitalize_First_Letter('DjangoAbstractBasics'), Capitalize_First_Letter(title)))
+				else:
+					app.write(texts)
+			src.close()
+
 
 		#also edit the properties.py in this folder for future re-usage purposes
 		with open(os.path.join(current_directory, 'properties.py'), 'w') as props:
