@@ -6,15 +6,12 @@ AND JUST RUN THIS FILE WITH PYTHON
 
 import os
 import properties
-import secrets
-import string
+import supports
 
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #parent_directory refers to the project folder
 current_directory = os.path.dirname(os.path.abspath(__file__))
 #current directory refers to the directory with this file in it (i.e ALIEN)
-
-#target directory would be defind later on and used to refer to the folder that has the root 'settings.py'
 
 parent_files_and_folders = []
 #parent_files_and_folders is empty for now but would be temporarily prepoluted automatically with the files...
@@ -26,69 +23,69 @@ for everything in os.listdir(parent_directory):
 
 #Below is the initial value of the project's main app name
 Initial_App_Name = properties.PROJECT_USER_APP
-#do not refer to Initial_App_Name directly to enable the system reverse all work done if there...
-#is an error....instead refer to properties.PROJECT_USER_APP
+#do not refer overwrite Initial_App_Name...instead overwrite properties.PROJECT_USER_APP
 	
 proj = input("Input title of your Django Project: ")
 title = input("What do you want to name the app that contains the AbstractBaseUser model?: ")
 
-#Generate_Secret_key generates random a 60-digit django secret key which excludes forbidden characters
-def Generate_Secret_Key(number=60):
-	ready = True
-	forbidden = ["'", '"', "\\"] #the forbidden characters
-
-	SECRET_KEY = ''.join([secrets.SystemRandom().choice(
-		"{}{}{}".format(string.ascii_letters, string.digits, string.punctuation)
-		) for i in range(number)]) #Secret_Key Generator
-	for characters in forbidden:
-		if characters in SECRET_KEY: #if there is any of the forbidden characters in the Secret_key...
-			ready = False #...change ready to Fals
-	if not ready:
-		#if secret key contains any forbidden_key,....
-		return Generate_Secret_Key()# start this process all over until the generated secret_key contains no forbidden character
-	return SECRET_KEY
-
-
-def Capitalize_First_Letter(word):
-	#as the name suggests, it capitalizes only the first letter of a given string
-	word = word.lower()
-	return word.replace(word[0], word[0].upper(), 1)
-
-
-
 if proj in parent_files_and_folders: #if the inputed project name exists in the parent_directory
-	print("Initiating Django-Abstract-StartPoint protocol...")
+	print("Initiating Django-Abstract-StartPoint protocol...preparing to write...")
 	target_directory = os.path.join(parent_directory, proj)
 	#target_directory refers to the django folder where django settings.py lives
+
+	#target_file refers to file in the actual django project's target folder
+	target_settings = os.path.join(target_directory, 'settings.py') 
+	target_urls = os.path.join(target_directory, 'urls.py')
+	target_app = os.path.join(parent_directory, properties.PROJECT_USER_APP, 'apps.py')
+
+	#base_file refers to the ones within the DJANGO ABSTRACT STARTPOINT i.e the ALIEN folder
+	base_settings = os.path.join(current_directory, 'source_settings.py')
+	base_urls = os.path.join(current_directory, 'source_urls.py')
+	base_app = os.path.join(current_directory, 'apps.py')
+	#and ofcourse the empty_files within the ALIEN folder
+	empty_file1 = os.path.join(current_directory, 'empty_file1.py')
+	empty_file2 = os.path.join(current_directory, 'empty_file2.py')
+	empty_file3 = os.path.join(current_directory, 'empty_file3.py')
+
 	try:
-		print("Locating all neccesary files and folders...")
-		target_settings = os.path.join(target_directory, 'settings.py') 
-		target_urls = os.path.join(target_directory, 'urls.py')
-		#traget_settings and target_urls refer to the the settings.py and urls.py in the actual django project folder
+		#progress_bar contained within the try statement would be used as countermeasurements in case of any error in the try statement
+		progress_bar = 0
 
-		#base_settings and base_urls refer to the ones within the DJANGO ABSTRACT STARTPOINT i.e the ALIEN folder
-		base_settings = os.path.join(current_directory, 'source_settings.py')
-		base_urls = os.path.join(current_directory, 'source_urls.py')
-
-		print("All necessary files located, preparing to edit...")
-		
-		#Now write a new settings.py with appropriate input
-		with open(target_settings, 'w') as sets:
+		progress_bar += 1 #progress_bar = 1  #the progress bar monitors the progress...and incase of error, it would be used to reverse changes made
+		#Now write a new settings.py with appropriate input, but first copy the settings to a safe place incase of an error
+		with open(target_settings, 'r') as settings:
+			#first open the empty_file1 and write the django settings to it.			
+			file1 = open(empty_file1, 'w')
+			for lines in settings:
+				file1.write(lines)
+			file1.close()
+			
+		progress_bar += 1 #progress_bar = 2  
+		#then write the new settings into django settings
+		with open(target_settings, 'w') as settings:
 			src = open(base_settings, 'r')
 			for texts in src:
 				if 'DjangoAbstractStartPoint' in texts:
-					sets.write(texts.replace('DjangoAbstractStartPoint', proj))
+					settings.write(texts.replace('DjangoAbstractStartPoint', proj))
 				elif 'DjangoAbstractBasics' in texts:
-					sets.write(texts.replace('DjangoAbstractBasics', title))
+					settings.write(texts.replace('DjangoAbstractBasics', title))
 				elif '__SECRET_KEY__' in texts:
-					sk = Generate_Secret_Key()
-					sets.write(texts.replace('__SECRET_KEY__', sk))
+					sk = supports.Generate_Secret_Key()
+					settings.write(texts.replace('__SECRET_KEY__', sk))
 				else:
-					sets.write(texts)
-			src.close()
-			print('Edited 1 from 3...')
+					settings.write(texts)
+			src.close()			
+		progress_bar += 1 #progress_bar = 3
 
-		#Write a new urls.py with appropriate input
+		#Write a new urls.py with appropriate input 
+		with open(target_urls, 'r') as urls:
+			#first open the empty_file1 and write the django urls.py to it.
+			file2 = open(empty_file2, 'w')
+			for lines in urls:
+				file2.write(lines)
+			file2.close()
+
+		progress_bar += 1 #progress bar = 4 
 		with open(target_urls, 'w') as urls:
 			src = open(base_urls, 'r')
 			for texts in src:
@@ -99,39 +96,44 @@ if proj in parent_files_and_folders: #if the inputed project name exists in the 
 				else:
 					urls.write(texts)
 			src.close()
-			print('Edited 2 from 3...')
 
-		#inside the created by DJANGO ABSTRACT STARTPOINT, change the apps.py to suit the name changes
-		target_app = os.path.join(parent_directory, 'DjangoAbstractBasics', 'apps.py')
-		base_app = os.path.join(current_directory, 'apps.py')
-		with open(target_app, 'w') as app:
+		progress_bar += 1 #progress_bar = 5
+		#inside the created by DJANGO ABSTRACT STARTPOINT, change the apps.py to suit whatever title the user gives
+		with open(target_app, 'r') as app:
+			#first open the empty_file3 and write the django urls.py to it.
+			file3 = open(empty_file3, 'w')
+			for lines in app:
+				file3.write(lines)
+			file3.close()
+
+		progress_bar += 1 #progress_bar = 6
+		with open(target_app, 'w') as app:			
 			src = open(base_app, 'r')
 			for texts in src:
 				if 'DjangoAbstractBasics' in texts:
 					app.write(texts.replace('DjangoAbstractBasics', title))
-				elif Capitalize_First_Letter('DjangoAbstractBasics') in texts:
-					app.write(texts.replace(Capitalize_First_Letter('DjangoAbstractBasics'), Capitalize_First_Letter(title)))
+				elif 'Djangoabstractbasics' in texts:
+					app.write(texts.replace('Djangoabstractbasics', supports.Capitalize_First_Letter(title)))
 				else:
 					app.write(texts)
-			src.close()
-
+			src.close()			
 
 		#also edit the properties.py in this folder for future re-usage purposes
 		with open(os.path.join(current_directory, 'properties.py'), 'w') as props:
-			props.write("DJANGO_PROJECT_NAME = '" + proj +"' \n")
 			props.write("PROJECT_USER_APP = '" + title +"' \n")
-			props.write("FIRST_SETUP = False")
-		print("All files ready to go...")
 
 		os.rename(os.path.join(parent_directory, Initial_App_Name), os.path.join(parent_directory, title))
-		print("All Processes Successfully Completed")
-
+		print('All Done!')
+		
 	except:
-		print('Ooooops!! Something has gone horribly wrong....')
+		print('Ooooops!! Something has gone wrong. Restoring your files...')
+		while progress_bar > 0:
+			supports.Reverse_Changes(progress_bar, empty_file1, empty_file2, empty_file3, target_settings, target_urls, target_app)
+			progress_bar -= 1
 
 
 else:
-	print('COULD NOT LOCATE ' + proj + '; check if the folder exist or consider manual approch')
+	print('Unable to locate ' + proj + '; check if the folder exists or consider manual approch')
 
 	
-t = input('Press enter to exit: ')
+t = input('Press enter/return to exit...')
